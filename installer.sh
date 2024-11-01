@@ -16,10 +16,10 @@ GENERATE_SECURE_SECRET_CMD="openssl rand --hex 16"
 GENERATE_K256_PRIVATE_KEY_CMD="openssl ecparam --name secp256k1 --genkey --noout --outform DER | tail --bytes=+8 | head --bytes=32 | xxd --plain --cols 32"
 
 # The Docker compose file.
-COMPOSE_URL="https://raw.githubusercontent.com/bluesky-social/pds/main/compose.yaml"
+COMPOSE_URL="https://raw.githubusercontent.com/prateek3255/bsky-pds/main/compose.yaml"
 
 # The pdsadmin script.
-PDSADMIN_URL="https://raw.githubusercontent.com/bluesky-social/pds/main/pdsadmin.sh"
+PDSADMIN_URL="https://raw.githubusercontent.com/prateek3255/bsky-pds/main/pdsadmin.sh"
 
 # System dependencies.
 REQUIRED_SYSTEM_PACKAGES="
@@ -77,35 +77,10 @@ function main {
 
   # Check for a supported architecture.
   # If the platform is unknown (not uncommon) then we assume x86_64
-  if [[ "${PLATFORM}" == "unknown" ]]; then
-    PLATFORM="x86_64"
-  fi
-  if [[ "${PLATFORM}" != "x86_64" ]] && [[ "${PLATFORM}" != "aarch64" ]] && [[ "${PLATFORM}" != "arm64" ]]; then
-    usage "Sorry, only x86_64 and aarch64/arm64 are supported. Exiting..."
-  fi
+  PLATFORM="aarch64"
 
   # Check for a supported distribution.
-  SUPPORTED_OS="false"
-  if [[ "${DISTRIB_ID}" == "ubuntu" ]]; then
-    if [[ "${DISTRIB_CODENAME}" == "focal" ]]; then
-      SUPPORTED_OS="true"
-      echo "* Detected supported distribution Ubuntu 20.04 LTS"
-    elif [[ "${DISTRIB_CODENAME}" == "jammy" ]]; then
-      SUPPORTED_OS="true"
-      echo "* Detected supported distribution Ubuntu 22.04 LTS"
-    elif [[ "${DISTRIB_CODENAME}" == "mantic" ]]; then
-      SUPPORTED_OS="true"
-      echo "* Detected supported distribution Ubuntu 23.10 LTS"
-    fi
-  elif [[ "${DISTRIB_ID}" == "debian" ]]; then
-    if [[ "${DISTRIB_CODENAME}" == "bullseye" ]]; then
-      SUPPORTED_OS="true"
-      echo "* Detected supported distribution Debian 11"
-    elif [[ "${DISTRIB_CODENAME}" == "bookworm" ]]; then
-      SUPPORTED_OS="true"
-      echo "* Detected supported distribution Debian 12"
-    fi
-  fi
+  SUPPORTED_OS="true"
 
   if [[ "${SUPPORTED_OS}" != "true" ]]; then
     echo "Sorry, only Ubuntu 20.04, 22.04, Debian 11 and Debian 12 are supported by this installer. Exiting..."
